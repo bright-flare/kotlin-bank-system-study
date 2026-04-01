@@ -1,4 +1,4 @@
-package brightflarestudy.kotlinbanksystemstudy
+package study.bank
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
