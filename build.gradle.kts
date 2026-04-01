@@ -25,6 +25,16 @@ dependencies {
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("tools.jackson.module:jackson-module-kotlin")
   testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+  
+  // mysql
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+  implementation("mysql:mysql-connector-java")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+  implementation("org.jetbrains.kotlin:kotlin-reflect")
+  
+  // mongoDB
+  implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+  
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
