@@ -9,20 +9,20 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "account")
-data class Account(
+data class User(
 
   @Id
   @Column(name = "ulid", length = 12, nullable = false)
   val ulid: String,
 
-  @Column(name = "balance", nullable = false, precision = 15, scale = 2)
-  var balance: BigDecimal = BigDecimal.ZERO,
+  @Column(name = "platform", nullable = false, length = 25)
+  var platform: String,
 
-  @Column(name = "account_number", length = 100, nullable = false, unique = true)
-  val accountNumber: String,
+  @Column(name = "username", nullable = false, unique = true, length = 50)
+  val username: String,
 
-  @Column(name = "is_deleted", nullable = false)
-  val isDeleted: Boolean = false,
+  @Column(name = "access_token", length = 255)
+  var accessToken: String?,
 
   @Column(name = "created_at", nullable = false, updatable = false)
   val createdAt: LocalDateTime = LocalDateTime.now(),
