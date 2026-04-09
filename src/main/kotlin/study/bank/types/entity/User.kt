@@ -3,12 +3,12 @@ package study.bank.types.entity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "account")
+@Table(name = "users")
 data class User(
 
   @Id
@@ -26,8 +26,8 @@ data class User(
 
   @Column(name = "created_at", nullable = false, updatable = false)
   val createdAt: LocalDateTime = LocalDateTime.now(),
-  
-  @Column(name = "updated_at", nullable = false, updatable = false)
-  val updatedAt: LocalDateTime = LocalDateTime.now(),
 
-)
+  @OneToMany(mappedBy = "user")
+  val accounts: List<Account> = mutableListOf(),
+
+  )
