@@ -5,3 +5,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+      
+oauth2:
+  providers:
+    github:
+      client-id: xxx
+      client-secret: xxx
+      redirect-uri: http://localhost:8080/callback/github
+    google:
+      client-id: yyy
+      client-secret: yyy
+      redirect-uri: http://localhost:8080/callback/google
