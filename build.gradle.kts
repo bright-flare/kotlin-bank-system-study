@@ -24,7 +24,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-validation")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("tools.jackson.module:jackson-module-kotlin")
-  testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+  implementation("com.squareup.okhttp3:okhttp:4.12.0")
   
   // mysql
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -35,6 +35,7 @@ dependencies {
   // mongoDB
   implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
   
+  testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

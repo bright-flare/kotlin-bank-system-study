@@ -1,6 +1,14 @@
 package study.bank.common.exception
 
-interface CodeInterface {
-  val code: Int
-  var message: String
-}
+class CustomException(
+
+  private val codeInterface: CodeInterface,
+  private val additionalMessage: String? = null
+
+) : RuntimeException(
+  if (additionalMessage == null) {
+    codeInterface.message
+  } else {
+    "${codeInterface.message} - $additionalMessage"
+  }
+)
