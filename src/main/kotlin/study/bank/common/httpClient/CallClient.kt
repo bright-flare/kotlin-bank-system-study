@@ -19,14 +19,19 @@ class CallClient(
     headers.forEach { (key, value) -> requestBuilder.addHeader(key, value) }
     val request = requestBuilder.build()
     
-    
+    return requestHandler(
+      httpClient.newCall(request).execute()
+    )
   }
   
   fun POST(url: String, headers: Map<String, String> = emptyMap(), body : RequestBody): String {
     val requestBuilder = Request.Builder().url(url).post(body)
     headers.forEach { (key, value) -> requestBuilder.addHeader(key, value) }
     val request = requestBuilder.build()
-    
+
+    return requestHandler(
+      httpClient.newCall(request).execute()
+    )
   }
 
   private fun requestHandler(response: Response): String {
@@ -37,7 +42,8 @@ class CallClient(
         throw CustomException(ErrorCode.FAILED_TO_CALL_CLIENT, msg)
       }
       
-      return it.body?.string() ?: throw CustomException(ErrorCode.))
+      return it.body?.string() ?: throw CustomException(ErrorCode.CALL_RESULT_BODY_NULL)
+      
     }
     
   }
