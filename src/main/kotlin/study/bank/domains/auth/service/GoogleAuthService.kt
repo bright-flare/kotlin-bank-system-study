@@ -2,7 +2,6 @@ package study.bank.domains.auth.service
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.serializer
 import okhttp3.FormBody
 import org.springframework.stereotype.Service
 import study.bank.common.exception.CustomException
@@ -39,39 +38,33 @@ class GoogleAuthService(
     
     val headers = mapOf("Accept" to "application/json")
     val json = httpClient.POST(tokenURL, headers, body)
-
-    JsonUtil.decodeFromJson(json, GithubTokenResponse.serializer())
-
+    val response = JsonUtil.decodeFromJson(json, GoogleTokenResponse.serializer())
+    
+    return response
   }
   
   override fun getUserInfo(accessToken: String): OAuth2UserResponse {
-    TODO("Not yet implemented")
+    val headers = mapOf(
+      "Content-Type" to "application/json",
+      "Authorization" to "token $accessToken",
+    )
+    
+    val jsonString = httpClient.GET(userInfoURL, headers)
+    val response = JsonUtil.decodeFromJson(jsonString, GoogleUserResponse.serializer())
+    
+    return response
   }
   
 }
 
 @Serializable
-data class GithubTokenResponse(
+data class GoogleTokenResponse(
   @SerialName("access_token") override val accessToken: String,
 ) : OAuth2TokenResponse
 
 @Serializable
-data class GithubUserResponse(
+data class GoogleUserResponse(
   override val id: String,
   override val name: String,
   override val email: String,
 ) : OAuth2UserResponse
-
-@Serializable
-data class GithubUserResponseTemp(
-  val id: Int,
-  val name: String,
-  val repos_url: String,
-) {
-  fun toOauth2UserResponse() = GithubUserResponse(
-    id = id.toString(),
-    email = repos_url,
-    name = name,
-  )
-  
-}

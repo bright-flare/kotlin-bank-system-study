@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 import study.bank.common.exception.CustomException
 import study.bank.common.exception.ErrorCode
 import study.bank.common.httpClient.CallClient
+import study.bank.common.json.JsonUtil
 import study.bank.config.OAuth2Config
 import study.bank.interfaces.OAuth2TokenResponse
 import study.bank.interfaces.OAuth2UserResponse
@@ -37,24 +38,48 @@ class GithubAuthService(
     
     val headers = mapOf("Accept" to "application/json")
     val json = httpClient.POST(tokenURL, headers, body)
+    val response: GithubTokenResponse = JsonUtil.decodeFromJson(json, GithubTokenResponse.serializer())
     
+    return response
+
   }
   
   override fun getUserInfo(accessToken: String): OAuth2UserResponse {
-    TODO("Not yet implemented")
+    val headers = mapOf(
+      "Content-Type" to "application/json",
+      "Authorization" to "token $accessToken",
+    )
+    
+    val jsonString = httpClient.GET(userInfoURL, headers)
+    val response = JsonUtil.decodeFromJson(jsonString, GithubUserResponse.serializer())
+    
+    return response
   }
   
 }
 
-
 @Serializable
-data class GoogleTokenResponse(
+data class GithubTokenResponse(
   @SerialName("access_token") override val accessToken: String,
 ) : OAuth2TokenResponse
 
 @Serializable
-data class GoogleUserResponse(
+data class GithubUserResponse(
   override val id: String,
   override val name: String,
   override val email: String,
 ) : OAuth2UserResponse
+
+@Serializable
+data class GithubUserResponseTemp(
+  val id: Int,
+  val name: String,
+  val repos_url: String,
+) {
+  fun toOauth2UserResponse() = GithubUserResponse(
+    id = id.toString(),
+    email = repos_url,
+    name = name,
+  )
+  
+}
