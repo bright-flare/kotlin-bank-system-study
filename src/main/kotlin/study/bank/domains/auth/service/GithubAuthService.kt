@@ -11,7 +11,7 @@ import study.bank.common.json.JsonUtil
 import study.bank.config.OAuth2Config
 import study.bank.interfaces.OAuth2TokenResponse
 import study.bank.interfaces.OAuth2UserResponse
-import study.bank.interfaces.OAuthServiceInterface
+import study.bank.interfaces.OAuthService
 
 private const val key = "github"
 
@@ -20,7 +20,7 @@ private const val key = "github"
 class GithubAuthService(
   private val config: OAuth2Config,
   private val httpClient: CallClient,
-) : OAuthServiceInterface {
+) : OAuthService {
 
   private val oAuthInfo = config.providers[key] ?: throw CustomException(ErrorCode.AUTH_CONFIG_NOT_FOUND, key)
   override val providerName: String = key

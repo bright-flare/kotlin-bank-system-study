@@ -11,5 +11,8 @@ enum class ErrorCode(override val code: Int, override var message: String) : Cod
   FAILED_TO_CALL_CLIENT(-101, "failed to call client"),
   CALL_RESULT_BODY_NULL(-102, "body is null"),
   PROVIDER_NOT_FOUND(-103, "provider not found"),
+  TOKEN_IS_INVALID(-104, "token is invalid"),
+  TOKEN_IS_EXPIRED(-105, "token is expired"),
+  FAILED_TO_INVOKE_IN_LOGGER(-106, "failed to invoke in logger"),
   
 }

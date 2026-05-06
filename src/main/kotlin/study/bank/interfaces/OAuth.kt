@@ -1,6 +1,6 @@
 package study.bank.interfaces
 
-interface OAuthServiceInterface {
+interface OAuthService {
   val providerName: String
   fun getToken(code: String): OAuth2TokenResponse
   fun getUserInfo(accessToken: String): OAuth2UserResponse
@@ -12,6 +12,6 @@ interface OAuth2TokenResponse {
 
 interface OAuth2UserResponse {
   val id: String
-  val email: String?
-  val name: String?
+  val email: String
+  val name: String
 }
