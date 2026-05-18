@@ -22,7 +22,7 @@ data class User(
   val username: String,
 
   @Column(name = "access_token", length = 255)
-  var accessToken: String?,
+  var accessToken: String,
 
   @Column(name = "created_at", nullable = false, updatable = false)
   val createdAt: LocalDateTime = LocalDateTime.now(),

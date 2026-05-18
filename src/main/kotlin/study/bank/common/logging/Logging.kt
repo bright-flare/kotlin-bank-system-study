@@ -8,12 +8,12 @@ import study.bank.common.exception.ErrorCode
 object Logging {
   fun <T : Any> getLogger(clazz: Class<T>): Logger = LoggerFactory.getLogger(clazz)
 
-  fun <T> logFor(log: Logger, function: () -> T?): T {
+  fun <T> logFor(log: Logger, function: (MutableMap<String, Any>) -> T?): T {
     val logInfo = mutableMapOf<String, Any>()
     
     logInfo["startTime"] = now()
     
-    val result = function.invoke()
+    val result = function.invoke(logInfo)
     
     logInfo["endTime"] = now()
     
