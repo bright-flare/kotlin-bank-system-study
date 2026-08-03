@@ -51,9 +51,9 @@ class GithubAuthService(
     )
     
     val jsonString = httpClient.GET(userInfoURL, headers)
-    val response = JsonUtil.decodeFromJson(jsonString, GithubUserResponse.serializer())
+    val response = JsonUtil.decodeFromJson(jsonString, GithubUserApiResponse.serializer())
     
-    return response
+    return response.toGithubUserResponse()
   }
   
 }
@@ -71,14 +71,14 @@ data class GithubUserResponse(
 ) : OAuth2UserResponse
 
 @Serializable
-data class GithubUserResponseTemp(
+data class GithubUserApiResponse(
   val id: Int,
   val name: String,
-  val repos_url: String,
+  val email: String,
 ) {
-  fun toOauth2UserResponse() = GithubUserResponse(
+  fun toGithubUserResponse() = GithubUserResponse(
     id = id.toString(),
-    email = repos_url,
+    email = email,
     name = name,
   )
   
