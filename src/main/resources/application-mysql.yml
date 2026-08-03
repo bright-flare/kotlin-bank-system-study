@@ -1,0 +1,12 @@
+spring:
+  docker:
+    compose:
+      enabled: true
+      lifecycle-management: start-only
+
+database:
+  mysql:
+    url: jdbc:mysql://localhost:3306/bank?useSSL=false&serverTimezone=UTC
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver

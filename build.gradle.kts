@@ -31,7 +31,6 @@ dependencies {
   
   // mysql
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-  implementation("mysql:mysql-connector-java")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   
@@ -43,7 +42,12 @@ dependencies {
   
   // ulid
   implementation("com.github.f4b6a3:ulid-creator:5.2.3")
-  
+
+  runtimeOnly("com.mysql:mysql-connector-j")
+  runtimeOnly("com.h2database:h2")
+
+  developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+
   testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")

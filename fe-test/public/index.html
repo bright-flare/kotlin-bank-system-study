@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>/callback API 테스트</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px; color: #222; }
+    h1 { font-size: 20px; }
+    h2 { font-size: 15px; margin-top: 32px; border-top: 1px solid #eee; padding-top: 20px; }
+    label { display: block; font-size: 12px; color: #666; margin: 10px 0 4px; }
+    input { width: 100%; padding: 8px; font-size: 13px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    button { padding: 8px 14px; font-size: 13px; margin: 12px 8px 0 0; cursor: pointer; border: 1px solid #ccc; background: #fafafa; border-radius: 4px; }
+    button.primary { background: #1a73e8; color: #fff; border-color: #1a73e8; }
+    pre { background: #f6f8fa; padding: 12px; border-radius: 6px; font-size: 12px; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+    .row { display: flex; gap: 12px; }
+    .row > div { flex: 1; }
+    .hint { font-size: 12px; color: #888; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <h1>GET /api/v1/auth/callback 테스트</h1>
+
+  <label>백엔드 주소</label>
+  <input id="backend" value="http://localhost:8080" />
+
+  <label>code (OAuth 공급자가 준 인가 코드)</label>
+  <input id="code" placeholder="예: 1a2b3c..." />
+
+  <p class="hint">state 는 버튼에 따라 <code>github</code> / <code>google</code> 로 전달된다 (AuthService 가 provider 키로 사용).</p>
+
+  <h2>1. 프록시로 호출 — 302 / Set-Cookie 원본 확인</h2>
+  <p class="hint">
+    Node 서버가 대신 호출하고 redirect 를 따라가지 않는다. 상태코드(302), Location, Set-Cookie 를 그대로 볼 수 있다.
+  </p>
+  <button class="primary" onclick="callViaProxy('github')">GitHub (state=github)</button>
+  <button class="primary" onclick="callViaProxy('google')">Google (state=google)</button>
+  <pre id="proxyResult">아직 호출 안 함</pre>
+
+  <h2>2. 브라우저에서 직접 호출 — 실제 리다이렉트/쿠키 동작 확인</h2>
+  <p class="hint">
+    브라우저가 302 를 따라가 http://localhost:3000 으로 돌아온다. 쿠키는 DevTools &gt; Application &gt; Cookies 에서 확인.
+    현재 서버 코드는 쿠키 path 가 <code>/callback</code> 이라 <code>/api/v1/auth/*</code> 요청에는 자동으로 실려가지 않는다.
+  </p>
+  <button onclick="callDirect('github')">GitHub (state=github)</button>
+  <button onclick="callDirect('google')">Google (state=google)</button>
+  <button onclick="showCookies()">현재 document.cookie 보기</button>
+  <pre id="cookieResult">-</pre>
+
+  <h2>3. 실제 OAuth 로그인부터 시작</h2>
+  <p class="hint">
+    공급자 인가 화면으로 이동한다. 공급자에 등록한 redirect_uri 가 백엔드 callback 과 같아야 한다.<br />
+    (application.yml 의 redirect-uri 는 현재 <code>http://localhost:8080/callback/github</code> 이라 실제 엔드포인트와 다르다 — 아래 값과 맞춰 두자.)
+  </p>
+  <div class="row">
+    <div>
+      <label>client_id</label>
+      <input id="clientId" placeholder="GitHub / Google OAuth App client id" />
+    </div>
+    <div>
+      <label>redirect_uri</label>
+      <input id="redirectUri" value="http://localhost:8080/api/v1/auth/callback" />
+    </div>
+  </div>
+  <button onclick="startOAuth('github')">GitHub 로그인</button>
+  <button onclick="startOAuth('google')">Google 로그인</button>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  async function callViaProxy(provider) {
+    const params = new URLSearchParams({
+      backend: $('backend').value,
+      code: $('code').value,
+      state: provider,
+    });
+    $('proxyResult').textContent = `호출 중... (state=${provider})`;
+    const res = await fetch(`/api/proxy-callback?${params}`);
+    const data = await res.json();
+    $('proxyResult').textContent = JSON.stringify(data, null, 2);
+  }
+
+  function callDirect(provider) {
+    const params = new URLSearchParams({ code: $('code').value, state: provider });
+    location.href = `${$('backend').value.replace(/\/$/, '')}/api/v1/auth/callback?${params}`;
+  }
+
+  function showCookies() {
+    $('cookieResult').textContent = document.cookie || '(httpOnly 쿠키는 JS 에서 안 보인다 — DevTools 로 확인)';
+  }
+
+  function startOAuth(provider) {
+    const clientId = $('clientId').value;
+    if (!clientId) return alert('client_id 를 입력하세요');
+
+    const redirectUri = $('redirectUri').value;
+    const authorizeUrl = {
+      github: 'https://github.com/login/oauth/authorize',
+      google: 'https://accounts.google.com/o/oauth2/v2/auth',
+    }[provider];
+
+    const params = new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      state: provider,
+      scope: provider === 'github' ? 'read:user user:email' : 'openid email profile',
+    });
+    if (provider === 'google') params.set('response_type', 'code');
+
+    location.href = `${authorizeUrl}?${params}`;
+  }
+</script>
+</body>
+</html>
