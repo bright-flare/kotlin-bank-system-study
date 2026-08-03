@@ -47,7 +47,7 @@ class GithubAuthService(
   override fun getUserInfo(accessToken: String): OAuth2UserResponse {
     val headers = mapOf(
       "Content-Type" to "application/json",
-      "Authorization" to "token $accessToken",
+      "Authorization" to "Bearer $accessToken",
     )
     
     val jsonString = httpClient.GET(userInfoURL, headers)

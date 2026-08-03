@@ -51,4 +51,9 @@ class AuthService(
     return@logFor token
   }
 
+  fun verifyToken(token: String) {
+    jwtProvider.verifyToken(token.removePrefix("Bearer "))
+  }
+
+
 }

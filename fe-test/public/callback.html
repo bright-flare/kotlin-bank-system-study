@@ -20,7 +20,8 @@
   <h3>받은 쿼리 파라미터</h3>
   <pre id="params"></pre>
 
-  <button onclick="forward()">이 code 로 백엔드 /callback 호출</button>
+  <input type="text" id="token">
+  <button onclick="forward()"> /verify-token 호출</button>
   <a href="/">← 메인으로</a>
   <pre id="result">-</pre>
 
@@ -35,7 +36,13 @@
       state: query.state || 'github',
     });
     document.getElementById('result').textContent = '호출 중...';
-    const res = await fetch(`/api/proxy-callback?${params}`);
+    const res = await fetch(`http://localhost:8080/api/v1/auth/verify-token`, {
+      method: "GET",
+      headers : {
+        "Authorization" : `Bearer ${document.getElementById('token').value}`
+      }
+    });
+
     document.getElementById('result').textContent = JSON.stringify(await res.json(), null, 2);
   }
 </script>
