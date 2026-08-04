@@ -14,5 +14,6 @@ enum class ErrorCode(override val code: Int, override var message: String) : Cod
   TOKEN_IS_INVALID(-104, "token is invalid"),
   TOKEN_IS_EXPIRED(-105, "token is expired"),
   FAILED_TO_INVOKE_IN_LOGGER(-106, "failed to invoke in logger"),
-  
+  FAILED_TO_SAVE_DATA(-107, "failed to save data"),
+
 }

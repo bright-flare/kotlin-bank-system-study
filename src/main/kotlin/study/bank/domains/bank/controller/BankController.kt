@@ -35,7 +35,7 @@ class BankController(
     fun removeAccount(
         @PathVariable("userUlid", required = true) userUlid: String,
         @PathVariable("accountUlid", required = true) accountUlid: String,
-    ): Response<BigDecimal> {
+    ): Response<String> {
         return bankService.removeAccount(userUlid = userUlid, accountUlid = accountUlid)
     }
 }
