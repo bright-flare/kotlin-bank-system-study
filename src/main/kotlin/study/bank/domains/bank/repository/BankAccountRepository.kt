@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import study.bank.types.entity.Account
 
 interface BankAccountRepository : JpaRepository<Account, String> {
-
+    fun findByUlid(accountUlid: String): Account?
 }
