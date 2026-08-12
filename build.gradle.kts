@@ -29,7 +29,11 @@ dependencies {
   implementation("tools.jackson.module:jackson-module-kotlin")
   implementation("com.squareup.okhttp3:okhttp:4.12.0")
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
-  
+
+  // redis
+  implementation("org.springframework.boot:spring-boot-starter-data-redis")
+  implementation("org.redisson:redisson-spring-boot-starter:3.36.0")
+
   // mysql
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")

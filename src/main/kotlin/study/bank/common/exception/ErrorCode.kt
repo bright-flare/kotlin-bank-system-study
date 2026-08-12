@@ -18,5 +18,7 @@ enum class ErrorCode(override val code: Int, override var message: String) : Cod
   FAILED_TO_FIND_ACCOUNT(-108, "failed to find account"),
   MISMATCH_ACCOUNT(-109, "mismatch account"),
   ACCOUNT_IS_NOT_ZERO(-110, "account is not zero"),
+  FAIL_TO_MUTEX_INVOKE(-111, "fail to invoke function in mutex"),
+  FAIL_TO_TRY_LOCK(-112, "fail to try lock in mutex"),
 
 }
