@@ -35,9 +35,16 @@ data class Account(
   val createdAt: LocalDateTime = LocalDateTime.now(),
 
   @Column(name = "updated_at", nullable = false, updatable = false)
-  val updatedAt: LocalDateTime = LocalDateTime.now(),
+  var updatedAt: LocalDateTime = LocalDateTime.now(),
 
   @Column(name = "deleted_at", nullable = true)
-  val deletedAt: LocalDateTime? = null,
+  var deletedAt: LocalDateTime? = null,
 
-)
+) {
+
+  fun deposit(value: BigDecimal) {
+    this.balance.add(value)
+    this.updatedAt = LocalDateTime.now()
+  }
+
+}

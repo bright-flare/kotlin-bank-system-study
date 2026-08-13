@@ -2,10 +2,12 @@ package study.bank.common.cache
 
 import org.redisson.api.RedissonClient
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.stereotype.Component
 import study.bank.common.exception.CustomException
 import study.bank.common.exception.ErrorCode
 import java.util.concurrent.TimeUnit
 
+@Component
 class RedisClient(
     private val template: RedisTemplate<String, String>,
     private val redissonClient: RedissonClient
