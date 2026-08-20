@@ -4,9 +4,11 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import study.bank.common.cache.RedisClient
 import study.bank.common.cache.RedisKeyProvider
+import study.bank.common.exception.CustomException
+import study.bank.common.exception.ErrorCode
 import study.bank.domains.transactions.domain.repository.TransactionAccountRepository
 import study.bank.domains.transactions.domain.repository.TransactionUserRepository
-import study.bank.domains.transactions.presentation.dto.DepositResponse
+import study.bank.types.dto.Response
 import study.bank.types.dto.ResponseProvider
 import java.math.BigDecimal
 
@@ -37,12 +39,36 @@ class TransactionService(
     }
 
     @Transactional
-    fun transfer(fromUlid: String, fromAccountId: String, toAccountId: String, value: BigDecimal) {
+    fun transfer(fromUlid: String, fromAccountId: String, toAccountId: String, value: BigDecimal): Response<TransferResponse> {
 
         val key = RedisKeyProvider.bankMutexKey(ulid = fromUlid, accountUlid = fromAccountId)
 
-        redisClient.invokeWithMutex(key) {
+        return redisClient.invokeWithMutex(key) {
 
+            val fromAccount = transactionAccountRepository.findByUlid(ulid = fromUlid) ?: throw CustomException(ErrorCode.FAILED_TO_FIND_ACCOUNT)
+            val toAccount = transactionAccountRepository.findByUlid(ulid = fromAccountId) ?: throw CustomException(ErrorCode.FAILED_TO_FIND_ACCOUNT)
+
+            if (fromAccount.user.ulid != fromUlid) {
+
+            } else if (fromAccount.balance < value) {
+
+            } else if (value < BigDecimal.ZERO) {
+
+            }
+
+            fromAccount.balance = fromAccount.balance.subtract(value)
+            toAccount.balance = toAccount.balance.add(value)
+
+            transactionAccountRepository.save(fromAccount)
+            transactionAccountRepository.save(toAccount)
+
+            return@invokeWithMutex ResponseProvider.success(
+                TransferResponse(
+                    afterFromBalance = fromAccount.balance,
+                    afterToBalance = toAccount.balance
+                )
+            )
         }
+
     }
 }
