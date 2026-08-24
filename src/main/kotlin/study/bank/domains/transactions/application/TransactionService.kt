@@ -8,6 +8,8 @@ import study.bank.common.exception.CustomException
 import study.bank.common.exception.ErrorCode
 import study.bank.domains.transactions.domain.repository.TransactionAccountRepository
 import study.bank.domains.transactions.domain.repository.TransactionUserRepository
+import study.bank.domains.transactions.presentation.dto.DepositResponse
+import study.bank.domains.transactions.presentation.dto.TransferResponse
 import study.bank.types.dto.Response
 import study.bank.types.dto.ResponseProvider
 import java.math.BigDecimal
@@ -20,11 +22,11 @@ class TransactionService(
 ) {
 
     @Transactional
-    fun deposit(ulid: String, accountId: String, value: BigDecimal) {
+    fun deposit(ulid: String, accountId: String, value: BigDecimal): Response<DepositResponse>? {
 
         val key = RedisKeyProvider.bankMutexKey(ulid, accountId)
 
-        redisClient.invokeWithMutex(key) {
+        return redisClient.invokeWithMutex(key) {
 
             val user = transactionUserRepository.findUserByUlid(ulid)
             val account = transactionAccountRepository.findByUlidAndUser(accountId, user)
@@ -39,7 +41,7 @@ class TransactionService(
     }
 
     @Transactional
-    fun transfer(fromUlid: String, fromAccountId: String, toAccountId: String, value: BigDecimal): Response<TransferResponse> {
+    fun transfer(fromUlid: String, fromAccountId: String, toAccountId: String, value: BigDecimal): Response<TransferResponse>? {
 
         val key = RedisKeyProvider.bankMutexKey(ulid = fromUlid, accountUlid = fromAccountId)
 

@@ -31,7 +31,7 @@ class RedisClient(
         return template.opsForValue().setIfAbsent(key, value) ?: false
     }
 
-    fun <T> invokeWithMutex(key: String, function: () -> T?): Response<TransferResponse> {
+    fun <T> invokeWithMutex(key: String, function: () -> T?): T? {
         val lock = redissonClient.getLock(key)
         var lockAcquired = false
 
