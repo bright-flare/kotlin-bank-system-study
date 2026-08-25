@@ -2,16 +2,17 @@ package study.bank.config
 
 import org.redisson.Redisson
 import org.redisson.api.RedissonClient
-import org.redisson.client.RedisClientConfig
 import org.redisson.config.Config
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import java.time.Duration
 
@@ -41,13 +42,14 @@ class RedisConfig {
     }
 
     @Bean
+    @Primary
     fun redisTemplate(factory: RedisConnectionFactory): RedisTemplate<String, String> {
         return RedisTemplate<String, String>().apply {
             connectionFactory = factory
             keySerializer = StringRedisSerializer()
-            valueSerializer = StringRedisSerializer()
+            valueSerializer = JacksonJsonRedisSerializer(String::class.java)
             hashKeySerializer = StringRedisSerializer()
-            hashValueSerializer = StringRedisSerializer()
+            hashValueSerializer = JacksonJsonRedisSerializer(String::class.java)
             afterPropertiesSet()
         }
     }
@@ -55,13 +57,14 @@ class RedisConfig {
     @Bean
     fun redissonClient(
         @Value("\${database.redis.host}") host: String,
+        @Value("\${database.redis.port}") port: Int,
         @Value("\${database.redis.timeout}") timeout: Long,
         @Value("\${database.redis.password}") password: String?,
     ): RedissonClient {
 
         val config = Config()
         val singleServerConfig = config.useSingleServer()
-            .setAddress(host)
+            .setAddress("$host:$port")
             .setTimeout(timeout.toInt())
 
         if (!password.isNullOrBlank()) {

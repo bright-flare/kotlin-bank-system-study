@@ -1,7 +1,7 @@
 plugins {
   kotlin("jvm") version "2.2.21"
   kotlin("plugin.spring") version "2.2.21"
-  id("org.springframework.boot") version "4.0.5"
+  id("org.springframework.boot") version "4.1.0"
   id("io.spring.dependency-management") version "1.1.7"
   
   kotlin("plugin.serialization") version "1.8.0"
@@ -32,13 +32,16 @@ dependencies {
 
   // redis
   implementation("org.springframework.boot:spring-boot-starter-data-redis")
-  implementation("org.redisson:redisson-spring-boot-starter:3.36.0")
+  implementation("org.redisson:redisson-spring-boot-starter:4.1.0")
 
   // mysql
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
-  
+
+  // kafka
+  implementation("org.springframework.kafka:spring-kafka:3.1.0")
+
   // mongoDB
   implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
   

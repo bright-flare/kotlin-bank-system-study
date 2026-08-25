@@ -5,7 +5,6 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
 import study.bank.common.exception.CustomException
 import study.bank.common.exception.ErrorCode
-import study.bank.types.dto.Response
 import java.util.concurrent.TimeUnit
 
 @Component

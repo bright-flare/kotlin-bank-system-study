@@ -18,13 +18,13 @@ class TransactionController(
 ) {
 
     @PostMapping("/deposit")
-    fun deposit(@RequestBody request: DepositRequest): Response<DepositResponse> {
+    fun deposit(@RequestBody request: DepositRequest): Response<DepositResponse>? {
         return transactionService.deposit(request.toUlid, request.toAccountId, request.value)
 
     }
 
     @PostMapping("/transfer")
-    fun transfer(@RequestBody request: TransferRequest): Response<TransferResponse> {
+    fun transfer(@RequestBody request: TransferRequest): Response<TransferResponse>? {
 
         return transactionService.transfer(request.fromUlid, request.fromAccountId, request.toAccountId, request.value)
 

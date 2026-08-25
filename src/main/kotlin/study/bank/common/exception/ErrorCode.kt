@@ -20,5 +20,7 @@ enum class ErrorCode(override val code: Int, override var message: String) : Cod
   ACCOUNT_IS_NOT_ZERO(-110, "account is not zero"),
   FAIL_TO_MUTEX_INVOKE(-111, "fail to invoke function in mutex"),
   FAIL_TO_TRY_LOCK(-112, "fail to try lock in mutex"),
+  VALUE_MUST_NOT_BE_UNDER_ZERO(-113, "value must be under zero"),
+  NOT_ENOUGH_VALUE(-114, "not enough value"),
 
 }

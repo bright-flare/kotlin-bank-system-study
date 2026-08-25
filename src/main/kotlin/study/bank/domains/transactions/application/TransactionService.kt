@@ -51,11 +51,11 @@ class TransactionService(
             val toAccount = transactionAccountRepository.findByUlid(ulid = fromAccountId) ?: throw CustomException(ErrorCode.FAILED_TO_FIND_ACCOUNT)
 
             if (fromAccount.user.ulid != fromUlid) {
-
+                throw CustomException(ErrorCode.FAILED_TO_FIND_ACCOUNT)
             } else if (fromAccount.balance < value) {
-
+                throw CustomException(ErrorCode.NOT_ENOUGH_VALUE)
             } else if (value < BigDecimal.ZERO) {
-
+                throw CustomException(ErrorCode.VALUE_MUST_NOT_BE_UNDER_ZERO)
             }
 
             fromAccount.balance = fromAccount.balance.subtract(value)
